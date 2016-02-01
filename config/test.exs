@@ -14,3 +14,5 @@ config :blog, Blog.Repo,
   adapter: Sqlite.Ecto,
   database: "db/blog_test.sqlite",
   pool: Ecto.Adapters.SQL.Sandbox
+
+config :comeonin, bcrypt_log_rounds: 4
