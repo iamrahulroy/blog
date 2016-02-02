@@ -4,9 +4,10 @@ defmodule Blog.PostController do
   alias Blog.Post
 
   plug :scrub_params, "post" when action in [:create, :update]
+  plug :assign_user
 
   def index(conn, _params) do
-    posts = Repo.all(Post)
+    posts = Repo.all(assoc(conn.assigns[:user], :posts))
     render(conn, "index.html", posts: posts)
   end
 
@@ -22,7 +23,7 @@ defmodule Blog.PostController do
       {:ok, _post} ->
         conn
         |> put_flash(:info, "Post created successfully.")
-        |> redirect(to: post_path(conn, :index))
+        |> redirect(to: user_post_path(conn, :index, conn.assigns[:user]))
       {:error, changeset} ->
         render(conn, "new.html", changeset: changeset)
     end
@@ -47,7 +48,7 @@ defmodule Blog.PostController do
       {:ok, post} ->
         conn
         |> put_flash(:info, "Post updated successfully.")
-        |> redirect(to: post_path(conn, :show, post))
+        |> redirect(to: user_post_path(conn, :show, conn.assigns[:user], post))
       {:error, changeset} ->
         render(conn, "edit.html", post: post, changeset: changeset)
     end
@@ -62,6 +63,16 @@ defmodule Blog.PostController do
 
     conn
     |> put_flash(:info, "Post deleted successfully.")
-    |> redirect(to: post_path(conn, :index))
+    |> redirect(to: user_post_path(conn, :index, conn.assigns[:user]))
+  end
+
+  defp assign_user(conn, _opts) do
+    case conn.params do
+      %{"user_id" => user_id} ->
+        user = Repo.get(Blog.User, user_id)
+        assign(conn, :user, user)
+      _->
+        conn
+    end
   end
 end

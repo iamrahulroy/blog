@@ -6,6 +6,8 @@ defmodule Blog.Post do
     field :body, :string
 
     timestamps
+
+    belongs_to :user, Blog.User
   end
 
   @required_fields ~w(title body)

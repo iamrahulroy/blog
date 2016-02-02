@@ -12,7 +12,10 @@ defmodule Blog.User do
     # Virtual Fields
     field :password, :string, virtual: true
     field :password_confirmation, :string, virtual: true
+
+    has_many :posts, Blog.Post
   end
+
 
   @required_fields ~w(username email password password_confirmation)
   @optional_fields ~w()
