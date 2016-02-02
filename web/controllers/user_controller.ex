@@ -30,7 +30,8 @@ defmodule Blog.UserController do
 
   def show(conn, %{"id" => id}) do
     user = Repo.get!(User, id)
-    render(conn, "show.html", user: user)
+    gravatar = User.gravatar(user.email)
+    render(conn, "show.html", user: user, gravatar: gravatar)
   end
 
   def edit(conn, %{"id" => id}) do

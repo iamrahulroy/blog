@@ -32,6 +32,15 @@ defmodule Blog.User do
     |> hash_password
   end
 
+
+  def gravatar(email) do
+    "http://www.gravatar.com/avatar/" <> md5(email)
+  end
+
+  defp md5(data) do
+    Base.encode16(:erlang.md5(data), case: :lower)
+  end
+
   defp hash_password(changeset) do
     if password = get_change(changeset, :password) do
       changeset
