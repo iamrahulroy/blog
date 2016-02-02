@@ -1,5 +1,7 @@
 # Blog
 
+A blog written in Elixir's Phoenix framework with authentication, authrization, gravatar, and markdown support.
+
 To start your Phoenix app:
 
   * Install dependencies with `mix deps.get`
