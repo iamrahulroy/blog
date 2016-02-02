@@ -5,8 +5,24 @@ defmodule Blog.PostControllerTest do
   @valid_attrs %{body: "some content", title: "some content"}
   @invalid_attrs %{}
 
-  test "lists all entries on index", %{conn: conn} do
-    conn = get conn, user_post_path(conn, :index, conn.assigns[:user])
+  setup do
+    {:ok, user} = create_user
+    conn = conn()
+    |> login_user(user)
+    {:ok, conn: conn, user: user}
+  end
+
+  defp create_user do
+    User.changeset(%User{}, %{email: "test@test.com", username: "test", password: "test", password_confirmation: "test"})
+    |> Repo.insert
+  end
+
+  defp login_user(conn, user) do
+    post conn, session_path(conn, :create), user: %{username: user.username, password: user.password}
+  end
+
+  test "lists all entries on index", %{conn: conn, user: user} do
+    conn = get conn, user_post_path(conn, :index, user)
     assert html_response(conn, 200) =~ "Listing posts"
   end
 
