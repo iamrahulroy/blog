@@ -20,7 +20,7 @@ defmodule Blog.Router do
 
     resources "posts", PostController
     resources "users", UserController
-    resources "sessions", SessionController, only: [:new, :create]
+    resources "sessions", SessionController, only: [:new, :create, :delete]
   end
 
   # Other scopes may use custom stacks.

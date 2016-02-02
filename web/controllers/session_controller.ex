@@ -15,6 +15,13 @@ defmodule Blog.SessionController do
     |> sign_in(user_params["password"], conn)
   end
 
+  def delete(conn, _params) do
+    conn
+    |> delete_session(:current_user)
+    |> put_flash(:info, "Signed out successfully!")
+    |> redirect(to: page_path(conn, :index))
+  end
+
   # Only runs when user is nil, else second method will take over.
   defp sign_in(user, password, conn) when is_nil(user) do
     conn
@@ -32,7 +39,7 @@ defmodule Blog.SessionController do
     else
       conn
       |> put_session(:current_user, nil)
-      |> put_flash(:error, "Invalid username/password combination")
+      |> put_flash(:error, "Invalid username/password combination!")
       |> redirect(to: page_path(conn, :index))
     end
   end
